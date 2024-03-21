@@ -1,0 +1,25 @@
+
+
+After I did a quick test (1) and 2, I found that the DCCN module didn't make any difference to my performance.
+
+I did take the DCCN and test it again (3) after running the test for 10 minutes each. Here's why that should apply:
+
+With the DCCN module, no noise would be a problem. But after running the test again 10 minutes each (3) the DCCN will still show no noise at all. You might be noticing that "some files are missing in the output directory" may not be a problem due to missing data. To fix this, simply delete and remove the missing files. (When moving back and forth between DCCNs, always delete and remove your local folders without deleting your files or folders.
+
+The easiest way out of this might be to install an external USB debugging tool, such as FUSE. If that's not possible, then look at my other post here.
+
+The second main problem of Windows 8.1 is that it seems like they have put a lot of effort into the removal of old file system.
+
+In my case, and this is very related to my memory setup from my previous posts, I have a set of files that I can try to remove. There are many different ways to do this. There's Windows 7/8 Pro, Windows 8 Pro, Windows 8 Pro 64 bit and later, and 64 bit of Windows versions, Microsoft Windows.
+
+There are also others such as:
+
+One of those (a custom file system) can work for me as an alternative to the DCCN (which will work much better for the same reason). Then one of those (a 64 bit system) works for me as well.
+
+In the future, it will also work for Windows.
+
+If you want to put the DCCN, make sure and run from your local computer and test it. If it works with Windows 8.1, it's still a good bet that it's working.
+
+You can find my other post on how to do all four steps in my other post here.
+
+

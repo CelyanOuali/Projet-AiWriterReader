@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk, scrolledtext, messagebox
+from tkinter import ttk, scrolledtext, messagebox, filedialog
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
 import random
 
@@ -150,13 +150,13 @@ class AIStoryStream:
     def save_story(self):
         story = self.story_output.get(1.0, tk.END)
         try:
-            filename = tk.filedialog.asksaveasfilename(defaultextension=".txt", filetypes=[("Text files", "*.txt")])
-            if filename:
-                with open(filename, "w") as file:
-                    file.write(story)
-                    messagebox.showinfo("Save Successful", "Story has been saved successfully.")
+            filename = "Stories.txt"
+            with open(filename, "a") as file:
+                file.write(story + "\n\n")
+            messagebox.showinfo("Save Successful", "Story has been saved successfully.")
         except Exception as e:
             messagebox.showerror("Error", f"Failed to save story: {str(e)}")
+
 
 if __name__ == '__main__':
     root = tk.Tk()
