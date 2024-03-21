@@ -22,7 +22,7 @@ class AIStoryStream:
             "What is the name of the continent?",
             "What type of leader (Dirigeant) is there? (Monarchy, Democracy, Anarchy, Dictatorship, Managed Democracy)"
         ]
-        self.answers = ["" for _ in range(len(self.questions))]
+        self.answers = [""] * len(self.questions)
         self.create_widgets()
         self.setup_gpt2()
 
@@ -36,6 +36,7 @@ class AIStoryStream:
 
         ttk.Button(self.root, text="Generate User Prompt Story", command=self.generate_user_prompt).pack(pady=5)
         ttk.Button(self.root, text="Generate Random Prompt Story", command=self.generate_random_prompt).pack(pady=5)
+        ttk.Button(self.root, text="Save Story", command=self.save_story).pack(pady=5)
 
         self.story_output = scrolledtext.ScrolledText(self.root, width=60, height=20)
         self.story_output.pack(pady=5)
@@ -43,85 +44,77 @@ class AIStoryStream:
         self.create_questions()
 
     def setup_gpt2(self):
-        # Initialize GPT-2 model and tokenizer
+
         self.tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
         self.model = GPT2LMHeadModel.from_pretrained("gpt2")
 
     def create_questions(self):
-    # Create widgets for questions
+
         self.question_widgets = []
         for i, question in enumerate(self.questions):
             label = ttk.Label(self.questions_frame, text=question)
             label.grid(row=i, column=0, padx=5, pady=5, sticky="w")
             var = tk.StringVar()
             var.set("")
-            if i == 0 or i == 10:  # For the number of heroes and side characters
+            if i == 0 or i == 10:
                 menu = ttk.Combobox(self.questions_frame, textvariable=var, values=[""] + [str(num) for num in range(1, 5)])
                 menu.grid(row=i, column=1, padx=5, pady=5)
                 self.question_widgets.append(var)
-            elif i == 1 or i == 5 or i == 11:  # For the hero names, anti-hero name, and continent name
+            elif i == 1 or i == 5 or i == 11:
                 entry = ttk.Entry(self.questions_frame, textvariable=var)
                 entry.grid(row=i, column=1, padx=5, pady=5)
                 self.question_widgets.append(var)
-            elif i == 2:  # For the theme question
+            elif i == 2:
                 menu = ttk.Combobox(self.questions_frame, textvariable=var, values=["", "Fantasy", "Science Fiction", "Mystery", "Adventure"])
                 menu.grid(row=i, column=1, padx=5, pady=5)
                 self.question_widgets.append(var)
-            elif i == 3:  # For the era question
+            elif i == 3:
                 menu = ttk.Combobox(self.questions_frame, textvariable=var, values=["", "Past", "Present", "Future", "Urban", "Prehistoric", "Medieval"])
                 menu.grid(row=i, column=1, padx=5, pady=5)
                 self.question_widgets.append(var)
-            elif i == 4:  # For the anti-hero question
+            elif i == 4:
                 menu = ttk.Combobox(self.questions_frame, textvariable=var, values=["", "Yes", "No"])
                 menu.grid(row=i, column=1, padx=5, pady=5)
                 self.question_widgets.append(var)
-            elif i == 6 or i == 7 or i == 8 or i == 9:  # For Yes/No questions
+            elif i == 6 or i == 7 or i == 8 or i == 9:
                 menu = ttk.Combobox(self.questions_frame, textvariable=var, values=["", "Yes", "No"])
                 menu.grid(row=i, column=1, padx=5, pady=5)
                 self.question_widgets.append(var)
-            elif i == 12:  # For the Dirigeant question
+            elif i == 12:
                 menu = ttk.Combobox(self.questions_frame, textvariable=var, values=["", "Monarchy", "Democracy", "Anarchy", "Dictatorship", "Managed Democracy"])
                 menu.grid(row=i, column=1, padx=5, pady=5)
                 self.question_widgets.append(var)
 
 
     def generate_user_prompt(self):
-        # Generate a story based on user-defined prompt
-        # Retrieve user answers
         for i, var in enumerate(self.question_widgets):
             self.answers[i] = var.get()
 
         try:
-            # Construct the user-defined prompt
             prompt = self.construct_prompt()
-
-            # Generate story based on the provided prompt
             generated_story = self.generate_story_from_prompt(prompt)
-
-            # Display the generated story
             self.display_story(generated_story)
 
         except Exception as e:
             messagebox.showerror("Error", f"Failed to generate story: {str(e)}")
 
     def construct_prompt(self):
-        # Construct the user-defined prompt
         prompt = ""
         for i, question in enumerate(self.questions):
             answer = self.answers[i]
-            if i == 1:  # Hero names
+            if i == 1:
                 if answer:
                     prompt += f"They were {len(answer.split(', '))} heroes, named {answer}, "
-            elif i == 2:  # Theme
+            elif i == 2:
                 if answer:
                     prompt += f"with a theme of {answer.lower()}, "
-            elif i == 3:  # Era
+            elif i == 3:
                 if answer:
                     prompt += f"set in the {answer.lower()} era, "
-            elif i == 4:  # Anti-hero
+            elif i == 4:
                 if answer == "Yes":
                     prompt += f"and there was an anti-hero named {self.answers[i + 1]}, "
-            elif i == 12:  # Leader type
+            elif i == 12:
                 if answer:
                     prompt += f"with a {answer.lower()} type of leader, "
             else:
@@ -133,20 +126,14 @@ class AIStoryStream:
     def generate_story_from_prompt(self, prompt):
         try:
             input_ids = self.tokenizer.encode(prompt, return_tensors="pt")
-
-            # Generate story based on the provided prompt without length restriction
             response = self.model.generate(input_ids, max_length=1000, do_sample=True)
-
-            # Decode the generated response
             generated_story = self.tokenizer.decode(response[0], skip_special_tokens=True)
-
             return generated_story
 
         except Exception as e:
             raise RuntimeError(f"Failed to generate story: {str(e)}")
 
     def generate_random_prompt(self):
-        # Generate a story based on a random prompt
         prompt = random.choice([
             "Once upon a time, in a land far, far away...",
             "In a galaxy not so far away, there was...",
@@ -157,9 +144,19 @@ class AIStoryStream:
         self.display_story(generated_story)
 
     def display_story(self, story):
-        # Display the generated story
         self.story_output.delete(1.0, tk.END)
         self.story_output.insert(tk.END, story)
+
+    def save_story(self):
+        story = self.story_output.get(1.0, tk.END)
+        try:
+            filename = tk.filedialog.asksaveasfilename(defaultextension=".txt", filetypes=[("Text files", "*.txt")])
+            if filename:
+                with open(filename, "w") as file:
+                    file.write(story)
+                    messagebox.showinfo("Save Successful", "Story has been saved successfully.")
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to save story: {str(e)}")
 
 if __name__ == '__main__':
     root = tk.Tk()
