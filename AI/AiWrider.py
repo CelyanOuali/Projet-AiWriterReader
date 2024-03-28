@@ -1,7 +1,10 @@
+import os
 import tkinter as tk
 from tkinter import ttk, scrolledtext, messagebox, filedialog
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
 import random
+from gtts import gTTS
+import tempfile
 
 class AIStoryStream:
     def __init__(self, root):
@@ -18,7 +21,7 @@ class AIStoryStream:
             "Are they advanced in science?",
             "Do they explore the stars?",
             "Do they explore the seas?",
-            "How many side characters do you want in your story? (Max 10)",
+            "How many side characters do you want in your story? (Max 4)",
             "What is the name of the continent?",
             "What type of leader (Dirigeant) is there? (Monarchy, Democracy, Anarchy, Dictatorship, Managed Democracy)"
         ]
@@ -37,6 +40,7 @@ class AIStoryStream:
         ttk.Button(self.root, text="Generate User Prompt Story", command=self.generate_user_prompt).pack(pady=5)
         ttk.Button(self.root, text="Generate Random Prompt Story", command=self.generate_random_prompt).pack(pady=5)
         ttk.Button(self.root, text="Save Story", command=self.save_story).pack(pady=5)
+        ttk.Button(self.root, text="Play Story", command=self.play_story).pack(pady=5)  # New button for playing the story
 
         self.story_output = scrolledtext.ScrolledText(self.root, width=60, height=20)
         self.story_output.pack(pady=5)
@@ -44,12 +48,10 @@ class AIStoryStream:
         self.create_questions()
 
     def setup_gpt2(self):
-
         self.tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
         self.model = GPT2LMHeadModel.from_pretrained("gpt2")
 
     def create_questions(self):
-
         self.question_widgets = []
         for i, question in enumerate(self.questions):
             label = ttk.Label(self.questions_frame, text=question)
@@ -85,26 +87,18 @@ class AIStoryStream:
                 menu.grid(row=i, column=1, padx=5, pady=5)
                 self.question_widgets.append(var)
 
-
-    def generate_user_prompt(self):
-        for i, var in enumerate(self.question_widgets):
-            self.answers[i] = var.get()
-
-        try:
-            prompt = self.construct_prompt()
-            generated_story = self.generate_story_from_prompt(prompt)
-            self.display_story(generated_story)
-
-        except Exception as e:
-            messagebox.showerror("Error", f"Failed to generate story: {str(e)}")
-
     def construct_prompt(self):
         prompt = ""
         for i, question in enumerate(self.questions):
             answer = self.answers[i]
             if i == 1:
                 if answer:
-                    prompt += f"They were {len(answer.split(', '))} heroes, named {answer}, "
+                    hero_count = len(answer.split(', '))
+                    prompt += f"They were {hero_count} heroes, named {answer}, "
+            elif i == 10:
+                if answer:
+                    side_character_count = int(answer)
+                    prompt += f"and {side_character_count} supporting characters, "
             elif i == 2:
                 if answer:
                     prompt += f"with a theme of {answer.lower()}, "
@@ -120,8 +114,8 @@ class AIStoryStream:
             else:
                 if answer == "Yes":
                     prompt += f"they {question.lower()}, "
-
         return prompt.strip() + "\n"
+
 
     def generate_story_from_prompt(self, prompt):
         try:
@@ -132,6 +126,18 @@ class AIStoryStream:
 
         except Exception as e:
             raise RuntimeError(f"Failed to generate story: {str(e)}")
+
+    def generate_user_prompt(self):
+        for i, var in enumerate(self.question_widgets):
+            self.answers[i] = var.get()
+
+        try:
+            prompt = self.construct_prompt()
+            generated_story = self.generate_story_from_prompt(prompt)
+            self.display_story(generated_story)
+
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to generate story: {str(e)}")
 
     def generate_random_prompt(self):
         prompt = random.choice([
@@ -156,6 +162,21 @@ class AIStoryStream:
             messagebox.showinfo("Save Successful", "Story has been saved successfully.")
         except Exception as e:
             messagebox.showerror("Error", f"Failed to save story: {str(e)}")
+
+    def play_story(self):
+        story = self.story_output.get(1.0, tk.END)
+        try:
+            temp_file = tempfile.NamedTemporaryFile(suffix=".mp3", delete=False)
+            self.generate_audio(story, temp_file.name)
+            temp_file.close()
+            os.system(f'start {temp_file.name}')  # Use system command to play the audio
+
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to play story: {str(e)}")
+
+    def generate_audio(self, text, filename):
+        tts = gTTS(text=text, lang='en')
+        tts.save(filename)
 
 
 if __name__ == '__main__':
