@@ -3,8 +3,10 @@ import tkinter as tk
 from tkinter import ttk, scrolledtext, messagebox, filedialog
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
 import random
-from gtts import gTTS
 import tempfile
+import MySQLdb
+from gtts import gTTS
+import base64
 
 class AIStoryStream:
     def __init__(self, root):
@@ -28,6 +30,10 @@ class AIStoryStream:
         self.answers = [""] * len(self.questions)
         self.create_widgets()
         self.setup_gpt2()
+
+        # Connexion à la base de données MySQL
+        self.db = MySQLdb.connect(host="localhost", user="root", db="aiwrider")
+        self.cursor = self.db.cursor()
 
     def create_widgets(self):
         # GUI setup
@@ -116,7 +122,6 @@ class AIStoryStream:
                     prompt += f"they {question.lower()}, "
         return prompt.strip() + "\n"
 
-
     def generate_story_from_prompt(self, prompt):
         try:
             input_ids = self.tokenizer.encode(prompt, return_tensors="pt")
@@ -156,9 +161,13 @@ class AIStoryStream:
     def save_story(self):
         story = self.story_output.get(1.0, tk.END)
         try:
-            filename = "Stories.txt"
-            with open(filename, "a") as file:
-                file.write(story + "\n\n")
+            # Save story content in the database
+            sql = "INSERT INTO story (titre, description, audio, date_de_création, date_de_modification) VALUES (%s, %s, %s, NOW(), NOW())"
+            audio_data = self.generate_audio(story)
+            values = ("Titre de l'histoire", story, audio_data)
+            self.cursor.execute(sql, values)
+            self.db.commit()
+
             messagebox.showinfo("Save Successful", "Story has been saved successfully.")
         except Exception as e:
             messagebox.showerror("Error", f"Failed to save story: {str(e)}")
@@ -166,18 +175,26 @@ class AIStoryStream:
     def play_story(self):
         story = self.story_output.get(1.0, tk.END)
         try:
+            audio_data = self.generate_audio(story)
             temp_file = tempfile.NamedTemporaryFile(suffix=".mp3", delete=False)
-            self.generate_audio(story, temp_file.name)
+            temp_file.write(audio_data)
             temp_file.close()
             os.system(f'start {temp_file.name}')  # Use system command to play the audio
 
         except Exception as e:
             messagebox.showerror("Error", f"Failed to play story: {str(e)}")
 
-    def generate_audio(self, text, filename):
-        tts = gTTS(text=text, lang='en')
-        tts.save(filename)
-
+    def generate_audio(self, text):
+        try:
+            temp_file = tempfile.NamedTemporaryFile(suffix=".mp3", delete=False)
+            tts = gTTS(text=text, lang='en')
+            tts.save(temp_file.name)
+            with open(temp_file.name, 'rb') as f:
+                audio_data = f.read()
+            temp_file.close()
+            return audio_data
+        except Exception as e:
+            raise RuntimeError(f"Failed to generate audio: {str(e)}")
 
 if __name__ == '__main__':
     root = tk.Tk()
