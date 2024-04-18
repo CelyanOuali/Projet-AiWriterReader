@@ -1,0 +1,163 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family:'Times New Roman', Times, serif
+}
+
+body {
+  background-color: rgb(70, 70, 70);
+  margin: 0; 
+  padding: 0; 
+  min-height: 100vh; 
+  color: aliceblue;
+}
+
+/* App.js */
+.App{
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
+.title {
+  padding: 15px;
+  text-align: center;
+}
+
+/* QuestionForm.css */
+
+.box {
+  display: flex;
+  margin: 150px 30px 0px 30px; 
+}
+
+.question-box {
+  border: 2px solid #ccc; 
+  border-radius: 5px;
+  padding: 20px;
+  font-size: 18px;
+  margin-bottom: 100px;
+}
+
+.question-item {
+  margin-bottom: 20px; /* Espacement entre les questions */
+  padding-left: 30px;
+  padding-right: 30px;
+}
+
+select,
+input {
+  margin-left: 10px; /* Ajouter un espace à gauche du select ou de l'input */
+
+}
+
+
+
+
+/*Histoire générée*/
+.generated {
+  width: 450px;
+  height: 650px;
+  margin: 0px 30px 0px 30px;
+}
+
+.comment {
+  width: 400px;
+  height: 100px;
+  margin: 0px 30px 0px 30px;
+}
+
+.story-generated {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.save-button, .random-button, .play-button, .fav-button {
+  margin-top: 25px;
+  color: rgb(0, 0, 0);
+  background-color: rgb(226, 220, 212);
+}
+
+.send-button {
+  margin-top: 15px;
+  margin-left: 30px;
+  color: rgb(0, 0, 0);
+  background-color: rgb(226, 220, 212);
+  padding: 5px 9px;
+  border: 2px solid #333;
+  border-radius: 5px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.leave-comment {
+  margin-left: 32px;
+}
+
+
+/* FAV ET COMMU*/
+.projet {
+  margin: 20px 30px 20px 32px;
+  position: relative;
+  display: inline-block;
+}
+
+.projet a {
+  display: block;
+  position: relative;
+  color: white;
+
+}
+
+.projet img {
+  width: 400px;
+  height: 100px;
+  border-radius: 5px;
+  object-fit: cover;
+  filter: brightness(35%);
+  transition: filter 0.4s ease-in-out;
+}
+
+.projet:hover img {
+  filter: brightness(60%);
+}
+
+.projet h3 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.5rem;
+  margin: 0;
+  font-size: 20px;
+}
+
+
+/*Header*/
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #333; 
+  color: #fff; 
+  padding: 25px 25px; 
+  z-index: 1000; 
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;
+}
+
+.header h1 {
+  text-align: center;
+}
+
+
+.logout-button {
+  background-color: transparent; 
+  border: none; 
+  color: #fff; 
+  cursor: pointer;
+  margin-left: auto;
+}
