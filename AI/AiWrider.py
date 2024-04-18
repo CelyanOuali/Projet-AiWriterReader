@@ -178,6 +178,14 @@ class AIStoryStream:
         tts = gTTS(text=text, lang='en')
         tts.save(filename)
 
+<<<<<<< HEAD
+=======
+
+if __name__ == '__main__':
+    root = tk.Tk()
+    app = AIStoryStream(root)
+    root.mainloop()
+>>>>>>> fba763f02f57fbb35a21db5e8bda47b3781abef5
 
 if __name__ == '__main__':
     root = tk.Tk()
