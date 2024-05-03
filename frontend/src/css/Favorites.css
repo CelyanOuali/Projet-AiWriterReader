@@ -1,0 +1,38 @@
+.favorites-page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 150px;
+  }
+  
+  .favorites-page h2 {
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+    margin-top: 15px;
+  }
+  
+  .favorites-page p {
+    color: #666;
+    font-size: 18px;
+    text-align: center;
+  }
+  
+  .nav-links {
+    display: flex;
+    align-items: center;
+  }
+  
+  .nav-link {
+    margin-right: 20px;
+    text-decoration: none;
+    color: #afafaf;
+    font-size: 18px;
+  }
+  
+  .nav-link:hover {
+    color: #ffffff;
+  }
+  
+
+ 

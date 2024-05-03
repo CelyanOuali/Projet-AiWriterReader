@@ -20,25 +20,32 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
-#from django.conf.urls import url
-from aiwriter.views import *
+#router: permet de faire les requêtes: /stories/ (liste de tous les objets de la classe React - Methodes CREATE et READ) , 
+# /stories/id (renvoie un seul objet de la classe React via id, une pk, - Méthodes UPDATE et DELETE)  
+from rest_framework import routers
+from aiwriter import views
+from aiwriter.api.signin import signup
+from aiwriter.api.login import login
+#from aiwriter.api.views import signup
+
+router = routers.DefaultRouter()
+
+#/api/stories : lien django Api Root
+#enregistrer la vue StoryView de l'app aiwriter avec 
+#le nom aiwriter pour l'URL api/stories/
+#création automatique des routes nécessaires pour les opérations 
+# CRUD (Create, Read, Update, Delete) sur les histoires.
+router.register(r'stories', views.StoryView, 'aiwriter')
 
 urlpatterns = [
+    #interface administration (gestions des utilisateurs, des groupes, des modèles de base de données)
     path('admin/', admin.site.urls),
-    # Vos autres vues...
-    path('generate-story/', ReactView.as_view(), name='generate_story'),
+    #url racine, qui donne accès à la collection de toutes les histoires, via http://127.0.0.1:8000/api/stories/
+    path('api/', include(router.urls)),
+    #url API, endpoint inscription
+    path('api/signup/', signup, name='signup'),
+    #url API, endpoint connexion
+    path('api/login/', login, name='login'),
 ]
 
-
-
-
-# from django.contrib import admin
-# from django.urls import path, include
-# #from django.conf.urls import url
-# from aiwriter.views import *
-
-# urlpatterns = [
-#     path('admin/', admin.site.urls),
-#     path('', ReactView.as_view(), seas="anything")
-# ]
 

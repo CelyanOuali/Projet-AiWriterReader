@@ -1,15 +1,15 @@
 // questions.js
 const questions = [
-    "Number of heroes:",
-    "Names:",
-    "Catégory:",
+    "Heroes:",
+    "Name(s):",
+    "Category:",
     "Era:",
-    "Anti-hero:",
+    "Antihero:",
     "Name:",
-    "Use magic?",
-    "Are they advanced in science?",
-    "Do they explore the stars?",
-    "Do they explore the seas?",
+    "Magic?",
+    "Science?",
+    "Stars?",
+    "Seas?",
     "Side characters:",
     "Place:",
     "Leadership:"

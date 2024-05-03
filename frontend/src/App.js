@@ -1,25 +1,24 @@
-// App.js
 import React from 'react';
-import LogIn from './components/LogIn';
-import SignIn from './components/SignIn';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Login from './components/Login';
+import Signup from './components/Signup';
 import GenerateStory from './components/GenerateStory';
+import Favorites from './components/Favorites';
 
-import './App.css';
 
 function App() {
   return (
       <div>
-        <GenerateStory/>
-      
-      {/*
-      <div className="App">
-      <h1 className='title'>AIStoryWriter</h1>
-      <hr></hr>
-      <GenerateStory />
-      <GenerateButton />
-      <StoryDisplay />
-      <SaveButton />
-      */}
+        {/* <Favorites /> */}
+        <BrowserRouter>
+          <Routes>
+            <Route index element={<Signup />} />
+            <Route path="/login" element={<Login />} /> 
+            <Route path="/generatestory" element={<GenerateStory />} /> 
+            <Route index element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+          </Routes>
+        </BrowserRouter>
       </div>
   );
 }

@@ -168,6 +168,22 @@ CREATE TABLE `users_choice` (
   `date_du_choix` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `user`
+--
+
+CREATE TABLE `favorites` (
+  `id_favorite` INT(11) AUTO_INCREMENT PRIMARY KEY,
+  `id_user` INT(11) NOT NULL,
+  `id_story` INT(11) NOT NULL,
+  `date_added` DATETIME NOT NULL,
+  FOREIGN KEY (`id_user`) REFERENCES `users`(`id`),
+  FOREIGN KEY (`id_story`) REFERENCES `stories`(`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
 --
 -- Index pour les tables déchargées
 --
